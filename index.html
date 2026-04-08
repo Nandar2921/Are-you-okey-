@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>✨ Happy Garden | Ultimate Fix ✨</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Dancing+Script:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Poppins', sans-serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+            color: #5C3D3D;
+            background: linear-gradient(135deg, #FFF0E7 0%, #FFE0E8 50%, #FFD9E6 100%);
+        }
+
+        /* Taman Bunga */
+        .garden { position: fixed; bottom: 0; left: 0; width: 100%; height: 100px; pointer-events: none; z-index: 1; }
+        .flower { position: absolute; bottom: 0; font-size: 1.8rem; animation: sway 3s infinite ease-in-out; transform-origin: bottom center; }
+        @keyframes sway { 0%,100% { transform: rotate(-5deg); } 50% { transform: rotate(5deg); } }
+        .butterfly { position: fixed; font-size: 1.5rem; pointer-events: none; z-index: 15; animation: fly 20s infinite linear; }
+        @keyframes fly { 0% { transform: translateX(-10%) translateY(20%) rotate(0deg); opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } 100% { transform: translateX(110%) translateY(-20%) rotate(360deg); opacity: 0; } }
+        .balloon { position: fixed; font-size: 1.8rem; pointer-events: none; z-index: 10; animation: floatBalloon 25s infinite ease-in-out; }
+        @keyframes floatBalloon { 0% { transform: translateY(100vh) translateX(0) rotate(0deg); opacity: 0; } 20% { opacity: 0.8; } 80% { opacity: 0.8; } 100% { transform: translateY(-20vh) translateX(50px) rotate(20deg); opacity: 0; } }
+        .sparkle { position: fixed; font-size: 1rem; pointer-events: none; z-index: 12; animation: sparkleAnim 2s ease-out forwards; }
+        @keyframes sparkleAnim { 0% { transform: scale(0) rotate(0deg); opacity: 1; } 100% { transform: scale(1.5) rotate(180deg); opacity: 0; } }
+        .bg-floating { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
+        .bg-floating div { position: absolute; border-radius: 50%; animation: floatAround 18s infinite ease-in-out; }
+        @keyframes floatAround { 0% { transform: translateY(100vh) translateX(-20px); opacity: 0; } 20% { opacity: 0.4; } 80% { opacity: 0.4; } 100% { transform: translateY(-20vh) translateX(40px); opacity: 0; } }
+
+        /* Music Player - Playlist Cantik */
+        .music-player {
+            position: fixed; bottom: 20px; left: 20px; right: 20px; z-index: 100;
+            background: rgba(255, 245, 240, 0.95); backdrop-filter: blur(15px);
+            border-radius: 30px; padding: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2); border: 2px solid #FFB7B2;
+        }
+        .music-header {
+            display: flex; align-items: center; justify-content: space-between;
+            margin-bottom: 12px; flex-wrap: wrap; gap: 10px;
+        }
+        .now-playing {
+            display: flex; align-items: center; gap: 10px;
+            background: #FFE0D4; padding: 6px 15px; border-radius: 40px;
+        }
+        .now-playing i { color: #D95C5C; font-size: 1.2rem; }
+        .now-playing span { font-weight: bold; font-size: 0.85rem; }
+        .music-controls { display: flex; gap: 10px; }
+        .music-btn {
+            background: linear-gradient(135deg, #F09B7E, #E86F8F); border: none;
+            width: 38px; height: 38px; border-radius: 50%; color: white;
+            cursor: pointer; font-size: 1rem; transition: 0.2s;
+        }
+        .music-btn:hover { transform: scale(1.05); background: #D95C5C; }
+        .playlist-grid {
+            display: flex; flex-wrap: wrap; gap: 8px;
+            max-height: 120px; overflow-y: auto;
+            padding: 5px;
+            background: rgba(255,250,245,0.5); border-radius: 20px;
+        }
+        .playlist-item {
+            background: #FFE0D4; border: none; padding: 6px 14px;
+            border-radius: 30px; font-size: 0.7rem; font-weight: 500;
+            cursor: pointer; transition: 0.2s; white-space: nowrap;
+        }
+        .playlist-item:hover { background: #FFB7B2; transform: scale(1.02); }
+        .playlist-item.active { background: #D95C5C; color: white; }
+
+        .container { position: relative; z-index: 5; max-width: 1300px; margin: 0 auto; padding: 1rem 1.5rem 4rem; }
+        .hero { text-align: center; padding: 1rem; background: rgba(255, 245, 240, 0.7); backdrop-filter: blur(12px); border-radius: 60px; margin-bottom: 1.5rem; }
+        .hero h1 { font-family: 'Dancing Script', cursive; font-size: 2.5rem; background: linear-gradient(135deg, #F09B7E, #E86F8F); background-clip: text; -webkit-background-clip: text; color: transparent; }
+
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem; }
+        .card { background: rgba(255, 250, 245, 0.85); backdrop-filter: blur(8px); border-radius: 35px; padding: 1rem; box-shadow: 0 10px 25px rgba(0,0,0,0.1); border: 1px solid rgba(255,200,180,0.6); }
+
+        .game-header { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin-bottom: 15px; }
+        .game-stats-card { background: #FFE0D4; border-radius: 40px; padding: 5px 15px; display: flex; gap: 15px; font-weight: bold; font-size: 0.9rem; }
+        .game-stats-card span { color: #D95C5C; font-weight: 800; }
+        .game-level, .game-timer { background: #5C3D3D; padding: 5px 15px; border-radius: 40px; color: #FFD6C0; font-weight: bold; font-size: 0.9rem; }
+        .level-progress { background: #FFE0D4; border-radius: 20px; height: 8px; margin-top: 8px; overflow: hidden; }
+        .level-progress-fill { background: #D95C5C; width: 0%; height: 100%; border-radius: 20px; transition: width 0.3s; }
+        #gameCanvas { background: rgba(255, 249, 245, 0.9); border-radius: 30px; cursor: pointer; width: 100%; max-width: 700px; height: auto; margin: 0 auto; display: block; border: 2px solid #FFD0C0; }
+        .game-btn { background: #FFB7B2; border: none; padding: 10px 25px; border-radius: 40px; font-weight: bold; cursor: pointer; font-size: 1rem; margin: 5px; transition: 0.2s; }
+        .game-btn:hover { transform: scale(1.02); background: #FF9E96; }
+        .btn-primary { background: #D95C5C; color: white; }
+        .btn-success { background: #4CAF50; color: white; }
+
+        .character-area { text-align: center; }
+        .character-emoji { font-size: 4rem; filter: drop-shadow(0 8px 15px rgba(0,0,0,0.2)); }
+        .hunger-bar { background: #E0C8C0; border-radius: 20px; height: 10px; margin: 8px 0; overflow: hidden; }
+        .hunger-fill { background: #FFB7B2; width: 100%; height: 100%; border-radius: 20px; transition: width 0.3s; }
+
+        .mission-item { background: #FFF4EE; border-radius: 20px; padding: 8px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem; }
+        .mission-completed { opacity: 0.6; text-decoration: line-through; background: #C5E0D4; }
+        .mission-reward { background: #FFD700; border-radius: 20px; padding: 2px 8px; font-size: 0.7rem; }
+
+        .achievement-badge { display: inline-block; background: #FFE0D4; border-radius: 30px; padding: 8px 12px; margin: 5px; text-align: center; font-size: 0.7rem; width: 100px; }
+        .achievement-unlocked { background: #FFD700; color: #5C3D3D; }
+        .achievement-locked { opacity: 0.5; filter: grayscale(0.3); }
+
+        .story-text { background: rgba(255,250,245,0.9); border-radius: 25px; padding: 12px; font-style: italic; font-size: 0.85rem; margin-bottom: 10px; }
+        .mood-stat { display: flex; gap: 8px; justify-content: center; margin-top: 10px; }
+        .mood-day { text-align: center; font-size: 0.7rem; }
+        .mood-emoji { font-size: 1.3rem; }
+        .mood-question { font-size: 1.1rem; font-family: 'Dancing Script', cursive; }
+        .mood-buttons { display: flex; justify-content: center; gap: 12px; margin: 12px 0; flex-wrap: wrap; }
+        .mood-btn { border: none; padding: 8px 18px; border-radius: 40px; font-size: 0.9rem; font-weight: bold; cursor: pointer; }
+        .mood-btn.happy { background: #FFB7B2; }
+        .mood-btn.normal { background: #C5E0D4; }
+        .mood-btn.sad { background: #B5C8D6; }
+        .surprise-box { background: #FFE6DD; border-radius: 30px; padding: 1rem; cursor: pointer; text-align: center; }
+        .timer-countdown { display: flex; justify-content: center; gap: 0.8rem; margin-top: 1rem; }
+        .timer-countdown div { background: #FFE0D4; padding: 0.6rem; border-radius: 20px; min-width: 60px; font-weight: bold; font-size: 1.1rem; text-align: center; }
+
+        @media (max-width: 850px) { 
+            .grid-2 { grid-template-columns: 1fr; gap: 1rem; } 
+            .hero h1 { font-size: 1.8rem; }
+            .playlist-grid { max-height: 100px; }
+        }
+        footer { text-align: center; margin-top: 1.5rem; font-size: 0.7rem; opacity: 0.7; }
+    </style>
+</head>
+<body>
+<div class="garden" id="garden"></div>
+<div class="bg-floating" id="bgFloat"></div>
+
+<!-- MUSIC PLAYER - PLAYLIST CANTIK -->
+<div class="music-player">
+    <div class="music-header">
+        <div class="now-playing">
+            <i class="fas fa-music"></i>
+            <span id="musicTitle">🎵 Pilih lagu</span>
+        </div>
+        <div class="music-controls">
+            <button class="music-btn" id="playPauseBtn"><i class="fas fa-play"></i></button>
+            <button class="music-btn" id="stopBtn"><i class="fas fa-stop"></i></button>
+        </div>
+    </div>
+    <div class="playlist-grid" id="playlistGrid"></div>
+</div>
+
+<div class="container">
+    <div class="hero">
+        <h1>🌸 Happy Garden 🌸</h1>
+        <p>Klik emoji yang bergerak! Semakin cepat, semakin tinggi combo! 💕</p>
+    </div>
+
+    <div class="grid-2">
+        <div class="card">
+            <div class="game-header">
+                <div class="game-stats-card"><div>⭐ <span id="scoreValue">0</span></div><div>🏆 <span id="highScoreValue">0</span></div></div>
+                <div class="game-level">🔥 Level <span id="levelValue">1</span></div>
+                <div class="game-timer">⏱️ <span id="gameTimer">30</span>s</div>
+            </div>
+            <div class="level-progress"><div class="level-progress-fill" id="levelProgressFill" style="width: 0%;"></div></div>
+            <p style="font-size:0.65rem; margin:5px 0;">📊 Naik level setiap 150 poin! (Max level 10)</p>
+            <canvas id="gameCanvas" width="700" height="350" style="width:100%; max-width:700px; height:auto; aspect-ratio:700/350"></canvas>
+            <div style="text-align:center; margin-top:15px;">
+                <button class="game-btn btn-primary" id="newGameBtn"><i class="fas fa-plus-circle"></i> Game Baru</button>
+                <button class="game-btn btn-success" id="continueBtn"><i class="fas fa-play"></i> Lanjutkan</button>
+            </div>
+            <p style="text-align:center; font-size:0.7rem; margin-top:10px;">😊🥰 = +10 | ⭐ = +30 | 💎 = +50 | 💣 = -5</p>
+        </div>
+
+        <div class="card character-area">
+            <h3><i class="fas fa-paw"></i> Peliharaanmu</h3>
+            <div class="character-emoji" id="characterEmoji">🌸😊🌸</div>
+            <div class="character-name">Bunga Si Kecil</div>
+            <div class="hunger-bar"><div class="hunger-fill" id="hungerFill" style="width: 100%;"></div></div>
+            <p id="characterMessage" style="font-size:0.75rem;">Aku senang kamu bermain!</p>
+            <button class="game-btn" id="feedBtn"><i class="fas fa-apple-alt"></i> Kasih Makan (10 poin)</button>
+            <button class="game-btn" id="petBtn"><i class="fas fa-hand-peace"></i> Belai (gratis)</button>
+        </div>
+    </div>
+
+    <div class="grid-2">
+        <div class="card"><h3><i class="fas fa-tasks"></i> Daily Mission</h3><div id="missionList"></div></div>
+        <div class="card"><h3><i class="fas fa-trophy"></i> Achievement</h3><div id="achievementList" style="display: flex; flex-wrap: wrap; justify-content: center;"></div></div>
+    </div>
+
+    <div class="grid-2">
+        <div class="card"><h3><i class="fas fa-book-open"></i> Story Mode</h3><div class="story-text" id="storyText">🌱 Level 1: Taman mulai mekar. Bunga kecil tumbuh dengan senyummu...</div><p style="font-size:0.7rem;">✨ Setiap level membawa cerita baru ✨</p></div>
+        <div class="card"><h3><i class="fas fa-hourglass-half"></i> Waktu Berharga Bersamamu</h3>
+            <div class="timer-countdown">
+                <div><span id="days">0</span><span>Hari</span></div>
+                <div><span id="hours">00</span><span>Jam</span></div>
+                <div><span id="minutes">00</span><span>Menit</span></div>
+                <div><span id="seconds">00</span><span>Detik</span></div>
+            </div>
+            <p id="preciousText" style="margin-top: 10px; font-style: italic; font-size: 0.8rem;">💕 Setiap detik bersamamu sangat berharga 💕</p>
+        </div>
+    </div>
+
+    <div class="grid-2">
+        <div class="card">
+            <div class="mood-question" id="moodQuestion">🌸 How are you feeling today? 🌸</div>
+            <div class="mood-buttons">
+                <button class="mood-btn happy" data-mood="happy">😊 Happy</button>
+                <button class="mood-btn normal" data-mood="normal">😐 Biasa</button>
+                <button class="mood-btn sad" data-mood="sad">🥺 Kurang Baik</button>
+            </div>
+            <div class="mood-response" id="moodResponse">✨ Klik tombol di atas ✨</div>
+            <button class="game-btn" id="newQuestionBtn"><i class="fas fa-sync-alt"></i> Ganti Pertanyaan</button>
+        </div>
+        <div class="card"><h3><i class="fas fa-chart-line"></i> Mood Statistik (7 Hari)</h3><div id="moodStats" class="mood-stat"></div></div>
+    </div>
+
+    <div class="grid-2">
+        <div class="card"><h3><i class="fas fa-gift"></i> Kotak Kejutan</h3><div class="surprise-box" id="surpriseBox"><i class="fas fa-envelope-open-text" style="font-size:2rem;"></i><p>Klik aku! 💌</p></div><div id="surpriseMessage">🌸 Ada pesan spesial...</div><button class="game-btn" id="confettiBtn">🎉 Rayakan 🎉</button></div>
+        <div class="card"><h3><i class="fas fa-fire"></i> Combo Status</h3><p id="comboText" style="font-size:1.2rem;">✨ Belum ada combo ✨</p><div style="display:flex; gap:8px; justify-content:center; margin-top:8px;"><span style="background:#FFE0D4; border-radius:20px; padding:4px 10px;">😊 +10</span><span style="background:#FFE0D4; border-radius:20px; padding:4px 10px;">⭐ +30</span><span style="background:#FFE0D4; border-radius:20px; padding:4px 10px;">💎 +50</span></div></div>
+    </div>
+    <footer>💕 Kamu berharga, kamu dicintai, kamu hebat! 💕</footer>
+</div>
+
+<script>
+    // ========== MUSIC PLAYLIST - 21 LAGU ==========
+    const playlist = [
+        { name: "1 of 1", file: "1 of 1.mp3" },
+        { name: "1991", file: "1991.mp3" },
+        { name: "Another Love", file: "Another love.mp3" },
+        { name: "Chosen", file: "Chosen.mp3" },
+        { name: "Cinnamon Girl", file: "Cinnamon Girl.mp3" },
+        { name: "Dear God", file: "DearGod.mp3" },
+        { name: "December", file: "December.mp3" },
+        { name: "Dewi", file: "Dewi.mp3" },
+        { name: "Heather", file: "Heather.mp3" },
+        { name: "Jealous", file: "Jealous.mp3" },
+        { name: "Love", file: "Love.mp3" },
+        { name: "Manchild", file: "manchild.mp3" },
+        { name: "Never Let Go", file: "Never let go.mp3" },
+        { name: "Next To You", file: "Next To You.mp3" },
+        { name: "One Last Time", file: "One last time.mp3" },
+        { name: "Risk It All", file: "Risk It All.mp3" },
+        { name: "Staying", file: "Staying.mp3" },
+        { name: "We Don't Talk Anymore", file: "We don't talk anymore.mp3" },
+        { name: "Who Knows", file: "Who Knows.mp3" },
+        { name: "Wish You Were Here", file: "wish you were here.mp3" },
+        { name: "Without Me", file: "Without Me.mp3" }
+    ];
+
+    let currentSong = 0;
+    let audio = new Audio();
+    let isPlaying = false;
+    const musicTitle = document.getElementById('musicTitle');
+    const playPauseBtn = document.getElementById('playPauseBtn');
+    const stopBtn = document.getElementById('stopBtn');
+    const playlistGrid = document.getElementById('playlistGrid');
+    
+    // Buat tombol playlist grid
+    function createPlaylistGrid() {
+        playlistGrid.innerHTML = '';
+        playlist.forEach((song, index) => {
+            const btn = document.createElement('button');
+            btn.className = 'playlist-item';
+            btn.textContent = `🎵 ${song.name}`;
+            btn.addEventListener('click', () => {
+                loadSong(index);
+                if (!isPlaying) {
+                    audio.play();
+                    isPlaying = true;
+                    playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
+                }
+            });
+            playlistGrid.appendChild(btn);
+        });
+    }
+    
+    function loadSong(index) {
+        currentSong = index;
+        audio.src = playlist[index].file;
+        musicTitle.innerText = playlist[index].name;
+        document.querySelectorAll('.playlist-item').forEach((btn, i) => {
+            if (i == index) btn.classList.add('active');
+            else btn.classList.remove('active');
+        });
+        if (isPlaying) {
+            audio.play().catch(e => console.log('Klik play untuk memutar lagu'));
+        }
+    }
+    
+    createPlaylistGrid();
+    
+    playPauseBtn.addEventListener('click', () => {
+        if (!audio.src) { loadSong(0); }
+        if (isPlaying) { audio.pause(); playPauseBtn.innerHTML = '<i class="fas fa-play"></i>'; }
+        else { audio.play(); playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>'; }
+        isPlaying = !isPlaying;
+    });
+    
+    stopBtn.addEventListener('click', () => { audio.pause(); audio.currentTime = 0; isPlaying = false; playPauseBtn.innerHTML = '<i class="fas fa-play"></i>'; });
+    
+    loadSong(0);
+    
+    // ========== GAME ==========
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+    
+    let score = parseInt(localStorage.getItem('gameScore')) || 0;
+    let highscore = parseInt(localStorage.getItem('highscore')) || 0;
+    let level = parseInt(localStorage.getItem('gameLevel')) || 1;
+    let combo = 0;
+    let items = [];
+    let gameActive = true;
+    let timeLeft = 30;
+    let timerInterval = null;
+    let animationId = null;
+    
+    const TARGET_SIZE = 45;
+    const NORMAL = ['😊', '🥰', '😍', '🌸', '✨', '💖'];
+    const POWER = '⭐', BOMB = '💣', GEM = '💎';
+    
+    document.getElementById('scoreValue').innerText = score;
+    document.getElementById('highScoreValue').innerText = highscore;
+    document.getElementById('levelValue').innerText = level;
+    updateLevelProgress();
+    updateStory(level);
+    
+    let clickMissionCount = parseInt(localStorage.getItem('clickMission')) || 0;
+    let feedMissionCount = parseInt(localStorage.getItem('feedMission')) || 0;
+    let moodMissionCount = parseInt(localStorage.getItem('moodMission')) || 0;
+    
+    function autoSave() {
+        localStorage.setItem('gameScore', score);
+        localStorage.setItem('gameLevel', level);
+        localStorage.setItem('clickMission', clickMissionCount);
+        localStorage.setItem('feedMission', feedMissionCount);
+        localStorage.setItem('moodMission', moodMissionCount);
+        if (score > highscore) {
+            highscore = score;
+            localStorage.setItem('highscore', highscore);
+            document.getElementById('highScoreValue').innerText = highscore;
+        }
+    }
+    
+    function updateLevelProgress() {
+        let progress = (score % 150) / 150 * 100;
+        document.getElementById('levelProgressFill').style.width = progress + '%';
+    }
+    
+    function updateStory(lvl) {
+        const stories = [
+            '🌱 Level 1: Taman mulai mekar. Bunga kecil tumbuh dengan senyummu...',
+            '🌸 Level 2: Bunga-bunga mulai bermekaran! Kupu-kupu datang berkunjung.',
+            '🦋 Level 3: Kupu-kupu berwarna-warni terbang di sekitarmu. Indah!',
+            '💖 Level 4: Bunga ajaib mulai bersinar. Kamu merasa lebih bahagia.',
+            '✨ Level 5: Taman penuh warna! Peri kecil muncul dan tersenyum padamu.',
+            '⭐ Level 6: Bintang jatuh memberikan berkah. Karaktermu semakin kuat!',
+            '🌈 Level 7: Pelangi muncul di atas taman. Suasana semakin ceria.',
+            '🌙 Level 8: Malam hari, taman bercahaya. Bunga tidur dengan damai.',
+            '👑 Level 9: Kamu menjadi penjaga taman sejati! Semua makhluk bahagia.',
+            '🌟 Level 10: TAMAN SEMPURNA! Kamu telah menyelesaikan cerita. Selamat!'
+        ];
+        let idx = Math.min(lvl - 1, 9);
+        document.getElementById('storyText').innerHTML = stories[idx];
+    }
+    
+    function randomItem() {
+        let r = Math.random(), type = 'normal';
+        if (r < 0.08) type = 'gem';
+        else if (r < 0.15) type = 'powerup';
+        else if (r < 0.25) type = 'bomb';
+        let emoji = NORMAL[Math.floor(Math.random() * NORMAL.length)];
+        if (type === 'powerup') emoji = POWER;
+        if (type === 'bomb') emoji = BOMB;
+        if (type === 'gem') emoji = GEM;
+        let spd = 1 + (level - 1) * 0.35;
+        return { x: Math.random() * (canvas.width - TARGET_SIZE), y: Math.random() * (canvas.height - TARGET_SIZE), emoji, type, vx: (Math.random() - 0.5) * 3.5 * spd, vy: (Math.random() - 0.5) * 3.5 * spd };
+    }
+    
+    function generateItems() {
+        items = [];
+        for (let i = 0; i < 8 + Math.min(level, 10); i++) items.push(randomItem());
+    }
+    
+    function startTimer() {
+        if (timerInterval) clearInterval(timerInterval);
+        timerInterval = setInterval(() => {
+            if (!gameActive) return;
+            if (timeLeft <= 1) {
+                clearInterval(timerInterval);
+                timerInterval = null;
+                gameActive = false;
+                alert('⏰ Waktu habis! Skor: ' + score + '\nKlik "Game Baru" atau "Lanjutkan"!');
+                autoSave();
+            } else {
+                timeLeft--;
+                document.getElementById('gameTimer').innerText = timeLeft;
+            }
+        }, 1000);
+    }
+    
+    function startGame() {
+        // Stop semua proses lama
+        if (timerInterval) clearInterval(timerInterval);
+        timerInterval = null;
+        
+        // Reset game state
+        gameActive = true;
+        timeLeft = 30;
+        combo = 0;
+        document.getElementById('gameTimer').innerText = timeLeft;
+        document.getElementById('comboText').innerHTML = '✨ Belum ada combo ✨';
+        
+        // Generate item baru
+        generateItems();
+        
+        // Start timer
+        startTimer();
+    }
+    
+    function fullResetGame() {
+        // Reset semua data
+        score = 0;
+        level = 1;
+        combo = 0;
+        clickMissionCount = 0;
+        feedMissionCount = 0;
+        moodMissionCount = 0;
+        
+        // Update UI
+        document.getElementById('scoreValue').innerText = score;
+        document.getElementById('levelValue').innerText = level;
+        updateLevelProgress();
+        updateStory(level);
+        
+        // Start game
+        startGame();
+        
+        // Save dan render
+        autoSave();
+        renderMissions();
+        
+        document.getElementById('characterMessage').innerHTML = '🔄 Game baru dimulai! Semangat!';
+        setTimeout(() => updateCharacterUI(), 2000);
+        canvasConfetti({ particleCount: 100 });
+    }
+    
+    function continueGame() {
+        if (!gameActive) {
+            startGame();
+            document.getElementById('characterMessage').innerHTML = '😊 Ayo lanjut main!';
+            setTimeout(() => updateCharacterUI(), 1500);
+        } else {
+            document.getElementById('characterMessage').innerHTML = '😊 Game masih berjalan! Terus main!';
+            setTimeout(() => updateCharacterUI(), 1500);
+        }
+    }
+    
+    function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        for (let i of items) {
+            ctx.font = `${TARGET_SIZE}px "Segoe UI Emoji"`;
+            ctx.textAlign = "center"; ctx.textBaseline = "middle";
+            if (i.type === 'powerup') { ctx.shadowBlur = 12; ctx.shadowColor = 'gold'; }
+            else if (i.type === 'bomb') { ctx.shadowBlur = 8; ctx.shadowColor = 'red'; }
+            else if (i.type === 'gem') { ctx.shadowBlur = 15; ctx.shadowColor = '#00CED1'; }
+            else { ctx.shadowBlur = 6; ctx.shadowColor = '#FFB7B2'; }
+            ctx.fillText(i.emoji, i.x + TARGET_SIZE/2, i.y + TARGET_SIZE/2);
+            ctx.shadowBlur = 0;
+        }
+    }
+    
+    function updateGameLoop() {
+        if (!gameActive) {
+            draw();
+            animationId = requestAnimationFrame(updateGameLoop);
+            return;
+        }
+        for (let i of items) {
+            i.x += i.vx; i.y += i.vy;
+            if (i.x <= 0 || i.x + TARGET_SIZE >= canvas.width) i.vx *= -1;
+            if (i.y <= 0 || i.y + TARGET_SIZE >= canvas.height) i.vy *= -1;
+            i.x = Math.min(Math.max(i.x, 0), canvas.width - TARGET_SIZE);
+            i.y = Math.min(Math.max(i.y, 0), canvas.height - TARGET_SIZE);
+        }
+        draw();
+        animationId = requestAnimationFrame(updateGameLoop);
+    }
+    
+    function createSparkle(x, y) {
+        for (let i = 0; i < 6; i++) {
+            let s = document.createElement('div');
+            s.className = 'sparkle';
+            s.innerHTML = ['✨', '⭐', '💫', '🌸'][Math.floor(Math.random() * 4)];
+            s.style.left = (x + (Math.random() - 0.5) * 30) + 'px';
+            s.style.top = (y + (Math.random() - 0.5) * 30) + 'px';
+            s.style.position = 'fixed';
+            document.body.appendChild(s);
+            setTimeout(() => s.remove(), 1500);
+        }
+    }
+    
+    function addScore(points) {
+        if (!gameActive) return;
+        score += points;
+        document.getElementById('scoreValue').innerText = score;
+        
+        let newLevel = 1 + Math.floor(score / 150);
+        if (newLevel > 10) newLevel = 10;
+        if (newLevel !== level) {
+            level = newLevel;
+            document.getElementById('levelValue').innerText = level;
+            updateStory(level);
+            canvasConfetti({ particleCount: 150, spread: 80, colors: ['#FFD700', '#FFB7B2'] });
+            document.getElementById('characterMessage').innerText = `🎉 Naik level ${level}! Kamu hebat! 🎉`;
+            setTimeout(() => updateCharacterUI(), 2000);
+        }
+        updateLevelProgress();
+        
+        if (score > highscore) {
+            highscore = score;
+            localStorage.setItem('highscore', highscore);
+            document.getElementById('highScoreValue').innerText = highscore;
+        }
+        checkAchievements();
+        autoSave();
+    }
+    
+    canvas.addEventListener('click', e => {
+        if (!gameActive) return;
+        const rect = canvas.getBoundingClientRect();
+        const sx = canvas.width / rect.width, sy = canvas.height / rect.height;
+        let mx = (e.clientX - rect.left) * sx, my = (e.clientY - rect.top) * sy;
+        createSparkle(e.clientX, e.clientY);
+        for (let i = 0; i < items.length; i++) {
+            let it = items[i];
+            if (mx >= it.x && mx <= it.x + TARGET_SIZE && my >= it.y && my <= it.y + TARGET_SIZE) {
+                if (it.type === 'bomb') { addScore(-5); combo = 0; document.getElementById('comboText').innerHTML = '💥 Kena BOM!'; canvasConfetti({ particleCount: 30, colors: ['#8B0000'] }); }
+                else if (it.type === 'powerup') { addScore(30); combo++; document.getElementById('comboText').innerHTML = `⭐ POWER! Combo ${combo}`; canvasConfetti({ particleCount: 80, colors: ['#FFD700'] }); }
+                else if (it.type === 'gem') { addScore(50); combo += 2; document.getElementById('comboText').innerHTML = `💎 PERMATA! Combo ${combo}`; canvasConfetti({ particleCount: 120, colors: ['#00CED1'] }); }
+                else { let gain = 10 + Math.floor(combo / 3) * 2; addScore(gain); combo++; document.getElementById('comboText').innerHTML = `🎉 Combo ${combo}! +${gain}`; canvasConfetti({ particleCount: 35, colors: ['#FFB7B2'] }); }
+                items.splice(i, 1);
+                items.push(randomItem());
+                clickMissionCount++;
+                renderMissions();
+                characterHappiness = Math.min(100, characterHappiness + 5);
+                updateCharacterUI();
+                break;
+            }
+        }
+    });
+    
+    document.getElementById('newGameBtn').addEventListener('click', () => { fullResetGame(); });
+    document.getElementById('continueBtn').addEventListener('click', () => { continueGame(); });
+    
+    // ========== KARAKTER ==========
+    let characterHunger = 100;
+    let characterHappiness = 100;
+    function updateCharacterUI() {
+        document.getElementById('hungerFill').style.width = characterHunger + '%';
+        let msg = document.getElementById('characterMessage');
+        if (characterHunger <= 30) msg.innerText = '🥺 Aku lapar... Kasih makan dong!';
+        else if (characterHappiness <= 40) msg.innerText = '😢 Aku sedih... Ajak main yuk!';
+        else msg.innerText = '😊 Aku senang! Terus main ya!';
+    }
+    setInterval(() => { if (gameActive) { characterHunger = Math.max(0, characterHunger - 1); updateCharacterUI(); } }, 30000);
+    document.getElementById('feedBtn').addEventListener('click', () => {
+        if (score >= 10 && gameActive) { addScore(-10); characterHunger = Math.min(100, characterHunger + 30); characterHappiness = Math.min(100, characterHappiness + 10); updateCharacterUI(); document.getElementById('characterMessage').innerText = '🍎 Makasih makanannya!'; canvasConfetti({ particleCount: 30 }); feedMissionCount++; renderMissions(); autoSave(); }
+        else if (!gameActive) document.getElementById('characterMessage').innerText = 'Game sedang berhenti. Klik Lanjutkan dulu!';
+        else document.getElementById('characterMessage').innerText = 'Poin kurang untuk beli makan :(';
+        checkAchievements();
+    });
+    document.getElementById('petBtn').addEventListener('click', () => { characterHappiness = Math.min(100, characterHappiness + 15); updateCharacterUI(); document.getElementById('characterMessage').innerText = '🥰 Senangnya kamu belai aku!'; checkAchievements(); });
+    
+    // ========== DAILY MISSION ==========
+    let missions = [
+        { name: 'Klik 20 emoji', target: 20, reward: 50, completed: false, get: () => clickMissionCount },
+        { name: 'Dapatkan combo 5x', target: 5, reward: 30, completed: false, get: () => combo },
+        { name: 'Kasih makan karakter', target: 2, reward: 40, completed: false, get: () => feedMissionCount },
+        { name: 'Jawab mood check in', target: 1, reward: 20, completed: false, get: () => moodMissionCount }
+    ];
+    function renderMissions() {
+        let html = '';
+        for (let i = 0; i < missions.length; i++) {
+            let m = missions[i];
+            let prog = m.get();
+            if (prog >= m.target && !m.completed) { m.completed = true; addScore(m.reward); canvasConfetti({ particleCount: 100 }); autoSave(); }
+            html += `<div class="mission-item ${m.completed ? 'mission-completed' : ''}"><span>${m.name} (${Math.min(prog, m.target)}/${m.target})</span><span class="mission-reward">+${m.reward}</span></div>`;
+        }
+        document.getElementById('missionList').innerHTML = html;
+    }
+    renderMissions();
+    
+    // ========== ACHIEVEMENT ==========
+    let achievements = JSON.parse(localStorage.getItem('achievements')) || { combo: false, highscore: false, feed: false, story: false };
+    function checkAchievements() {
+        let changed = false;
+        if (combo >= 10 && !achievements.combo) { achievements.combo = true; changed = true; canvasConfetti({ particleCount: 200 }); alert('🏆 Achievement Unlocked: Combo Master!'); }
+        if (score >= 500 && !achievements.highscore) { achievements.highscore = true; changed = true; canvasConfetti({ particleCount: 200 }); alert('🏆 Achievement Unlocked: Poin Hunter!'); }
+        if (feedMissionCount >= 5 && !achievements.feed) { achievements.feed = true; changed = true; alert('🏆 Achievement Unlocked: Sahabat Karakter!'); }
+        if (level >= 10 && !achievements.story) { achievements.story = true; changed = true; alert('🏆 Achievement Unlocked: Penjaga Taman!'); }
+        if (changed) { localStorage.setItem('achievements', JSON.stringify(achievements)); renderAchievements(); autoSave(); }
+    }
+    function renderAchievements() {
+        document.getElementById('achievementList').innerHTML = `
+            <div class="achievement-badge ${achievements.combo ? 'achievement-unlocked' : 'achievement-locked'}">🏆 Combo Master</div>
+            <div class="achievement-badge ${achievements.highscore ? 'achievement-unlocked' : 'achievement-locked'}">⭐ Poin Hunter</div>
+            <div class="achievement-badge ${achievements.feed ? 'achievement-unlocked' : 'achievement-locked'}">🍎 Sahabat Karakter</div>
+            <div class="achievement-badge ${achievements.story ? 'achievement-unlocked' : 'achievement-locked'}">📖 Penjaga Taman</div>
+        `;
+    }
+    renderAchievements();
+    
+    // ========== TIMER BERHARGA ==========
+    let startTime = localStorage.getItem('happyStartTime');
+    if (!startTime) { startTime = Date.now(); localStorage.setItem('happyStartTime', startTime); }
+    function updatePreciousTimer() {
+        const elapsed = Date.now() - parseInt(startTime);
+        const days = Math.floor(elapsed / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((elapsed % (86400000)) / 3600000);
+        const minutes = Math.floor((elapsed % 3600000) / 60000);
+        const seconds = Math.floor((elapsed % 60000) / 1000);
+        document.getElementById('days').innerText = days;
+        document.getElementById('hours').innerText = hours < 10 ? '0' + hours : hours;
+        document.getElementById('minutes').innerText = minutes < 10 ? '0' + minutes : minutes;
+        document.getElementById('seconds').innerText = seconds < 10 ? '0' + seconds : seconds;
+        const preciousText = document.getElementById('preciousText');
+        if (days === 0 && hours < 1) preciousText.innerHTML = '💕 Baru saja dimulai, tapi rasanya sudah berharga! 💕';
+        else if (days === 0) preciousText.innerHTML = '🌸 ' + hours + ' jam kebersamaan yang indah bersamamu! 🌸';
+        else if (days < 7) preciousText.innerHTML = '✨ ' + days + ' hari penuh senyuman dan kebahagiaan! ✨';
+        else preciousText.innerHTML = '🌟 Sudah ' + days + ' hari kita berbagi kebahagiaan. Kamu luar biasa! 🌟';
+    }
+    setInterval(updatePreciousTimer, 1000);
+    updatePreciousTimer();
+    
+    // ========== MOOD CHECK IN ==========
+    const moodQuestions = ["🌸 How are you feeling today?", "💭 Are you okay?", "🌟 What made you smile today?", "🌙 Do you need a hug?", "💖 Are you happy right now?"];
+    let qIdx = 0;
+    document.getElementById('moodQuestion').innerHTML = moodQuestions[0];
+    const moodResponses = {
+        happy: { 0: "🥰 Senang! Semoga harimu makin cerah!", 1: "💖 Syukurlah kamu baik-baik saja!", 2: "😊 Ceritakan dong! Aku ikut senang!", 3: "🤗 Pelukan hangat untukmu!", 4: "🌸 Senangnya! Kamu luar biasa!" },
+        normal: { 0: "😊 Biasa aja gapapa, besok lebih baik!", 1: "🌿 Kamu tetap berharga!", 2: "🌸 Coba ingat-ingat hal kecil yang bikin senyum!", 3: "🤗 Ayo peluk sebentar!", 4: "😐 Semoga segera lebih bahagia!" },
+        sad: { 0: "🥺 Aku di sini untukmu, kamu tidak sendirian!", 1: "💝 Kamu kuat, kamu hebat!", 2: "🥲 Meskipun berat, aku yakin ada hal kecil yang indah!", 3: "🤗 Pelukan erat! Kamu berharga!", 4: "🌙 Besok lebih baik, janji!" }
+    };
+    document.querySelectorAll('.mood-btn').forEach(btn => btn.addEventListener('click', () => { let mood = btn.dataset.mood; let resp = moodResponses[mood][qIdx] || moodResponses[mood][0]; document.getElementById('moodResponse').innerHTML = resp; moodMissionCount++; renderMissions(); addMood(mood === 'happy' ? '😊' : mood === 'normal' ? '😐' : '🥺'); if (mood === 'happy') canvasConfetti({ particleCount: 100 }); autoSave(); }));
+    document.getElementById('newQuestionBtn').addEventListener('click', () => { qIdx = (qIdx + 1) % moodQuestions.length; document.getElementById('moodQuestion').innerHTML = moodQuestions[qIdx]; document.getElementById('moodResponse').innerHTML = "✨ Klik tombol di atas ✨"; });
+    
+    // ========== MOOD STATISTIK ==========
+    let moodHistory = JSON.parse(localStorage.getItem('moodHistory')) || Array(7).fill('😐');
+    function addMood(mood) { moodHistory.push(mood); if (moodHistory.length > 7) moodHistory.shift(); localStorage.setItem('moodHistory', JSON.stringify(moodHistory)); updateMoodStat(); }
+    function updateMoodStat() { document.getElementById('moodStats').innerHTML = moodHistory.map((m, i) => `<div class="mood-day"><div class="mood-emoji">${m}</div><div>H-${6-i}</div></div>`).join(''); }
+    updateMoodStat();
+    
+    // ========== SURPRISE ==========
+    const surpriseMsgs = ["💖 Kamu luar biasa!", "🌸 Kamu berharga!", "✨ Tersenyumlah!", "🎀 Kamu dicintai!", "🦋 Kamu hebat!"];
+    let sIdx = 0;
+    document.getElementById('surpriseBox').addEventListener('click', () => { sIdx = (sIdx+1)%surpriseMsgs.length; document.getElementById('surpriseMessage').innerHTML = surpriseMsgs[sIdx]; canvasConfetti({ particleCount: 120 }); });
+    document.getElementById('confettiBtn').addEventListener('click', () => { canvasConfetti({ particleCount: 400, spread: 140 }); });
+    
+    // ========== TAMAN BUNGA ==========
+    const garden = document.getElementById('garden');
+    for (let i = 0; i < 25; i++) { let f = document.createElement('div'); f.className = 'flower'; f.style.left = Math.random() * 100 + '%'; f.style.bottom = Math.random() * 40 + 'px'; f.style.fontSize = (Math.random() * 20 + 18) + 'px'; f.style.animationDelay = Math.random() * 3 + 's'; f.innerText = ['🌻','🌷','🌹','🌸','🌼'][Math.floor(Math.random()*5)]; garden.appendChild(f); }
+    for (let i = 0; i < 6; i++) { let b = document.createElement('div'); b.className = 'butterfly'; b.innerHTML = '🦋'; b.style.top = Math.random() * 80 + '%'; b.style.left = Math.random() * 100 + '%'; b.style.animationDelay = Math.random() * 10 + 's'; b.style.animationDuration = (Math.random() * 12 + 12) + 's'; document.body.appendChild(b); }
+    for (let i = 0; i < 15; i++) { let bl = document.createElement('div'); bl.className = 'balloon'; bl.innerHTML = '🎈'; bl.style.left = Math.random() * 100 + '%'; bl.style.animationDelay = Math.random() * 15 + 's'; bl.style.animationDuration = (Math.random() * 15 + 12) + 's'; document.body.appendChild(bl); }
+    for (let i = 0; i < 40; i++) { let fl = document.createElement('div'); let s = Math.random() * 30 + 15; fl.style.width = s + 'px'; fl.style.height = s + 'px'; fl.style.left = Math.random() * 100 + '%'; fl.style.animationDelay = Math.random() * 15 + 's'; fl.style.animationDuration = Math.random() * 12 + 8 + 's'; fl.style.background = `radial-gradient(circle, rgba(255,${150+Math.random()*105},${180+Math.random()*75},0.3) 0%, rgba(255,200,210,0) 80%)`; document.getElementById('bgFloat').appendChild(fl); }
+    
+    // Start game
+    startGame();
+    updateGameLoop();
+</script>
+</body>
+</html>
